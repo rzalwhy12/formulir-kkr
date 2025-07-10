@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,7 +59,9 @@ export default function KKRRegistrationForm() {
       } else {
         throw new Error('Failed to submit');
       }
-    } catch (error) {
+    } catch (error) { // Baris 62
+      // FIX: Menggunakan variabel 'error' untuk logging
+      console.error("Submission error:", error); 
       toast({
         title: "Error",
         description: "Terjadi kesalahan saat mengirim data. Silakan coba lagi.",
