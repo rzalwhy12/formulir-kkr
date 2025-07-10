@@ -1,0 +1,11 @@
+{
+    "rules": {
+        "semi": "off", // Menonaktifkan aturan 'semi' (titik koma)
+        "no-unused-vars": "off", // Menonaktifkan aturan 'no-unused-vars'
+        "indent": [
+            "error",
+            2
+        ], // Contoh aturan lain yang tetap aktif
+        "prettier/prettier": "off" // Jika Anda menggunakan eslint-plugin-prettier
+    }
+}
