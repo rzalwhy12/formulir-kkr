@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image'; // Import komponen Image dari next/image
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,8 +60,7 @@ export default function KKRRegistrationForm() {
       } else {
         throw new Error('Failed to submit');
       }
-    } catch (error) { // Baris 62
-      // FIX: Menggunakan variabel 'error' untuk logging
+    } catch (error) {
       console.error("Submission error:", error); 
       toast({
         title: "Error",
@@ -86,8 +86,15 @@ export default function KKRRegistrationForm() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 p-4 rounded-full shadow-lg">
-              <Cross className="w-8 h-8 text-white" />
+            <div className='mt-8'>
+              {/* Mengganti ikon Cross dengan logo KPRPPI */}
+              <Image 
+                src="/logo-kprppi.png" 
+                alt="Logo KPRPPI" 
+                width={100} // Sesuaikan lebar sesuai kebutuhan
+                height={100} // Sesuaikan tinggi sesuai kebutuhan
+                className="object-contain" // Menjaga aspek rasio dan mengisi area
+              />
             </div>
           </div>
           <h1 className="text-4xl font-bold text-blue-900 mb-4">
@@ -97,7 +104,7 @@ export default function KKRRegistrationForm() {
             Kebaktian Kebangunan Rohani - Bergabunglah dengan kami dalam ibadah yang penuh berkat
           </p>
           <div className="mt-6 flex justify-center">
-            <div className="h-1 w-24 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
+            <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-yellow-600 rounded-full"></div>
           </div>
         </div>
 
@@ -108,7 +115,7 @@ export default function KKRRegistrationForm() {
             <div className="order-1 lg:order-1">
               <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-100 to-yellow-100">
                 <img
-                  src="https://images.pexels.com/photos/8468/cross-sunset-sunrise-hill.jpg?auto=compress&cs=tinysrgb&w=800"
+                  src="/kkr.jpg"
                   alt="KKR Event"
                   className="w-full h-full object-cover"
                 />
@@ -120,7 +127,6 @@ export default function KKRRegistrationForm() {
               <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
                 <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-t-lg">
                   <CardTitle className="text-2xl flex items-center gap-2">
-                    <Cross className="w-6 h-6" />
                     Daftar Sekarang
                   </CardTitle>
                   <CardDescription className="text-blue-100">
@@ -233,7 +239,14 @@ export default function KKRRegistrationForm() {
           </p>
           <div className="mt-4 flex justify-center">
             <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 p-2 rounded-full">
-              <Cross className="w-4 h-4 text-white" />
+              {/* Mengganti ikon Cross dengan logo KPRPPI di footer */}
+              <Image 
+                src="/logo-kprppi.png" 
+                alt="Logo KPRPPI" 
+                width={70} // Sesuaikan lebar sesuai kebutuhan
+                height={70} // Sesuaikan tinggi sesuai kebutuhan
+                className="object-contain"
+              />
             </div>
           </div>
         </div>
