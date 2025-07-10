@@ -19,21 +19,16 @@ import Link from 'next/link';
 interface Registration {
   objectId: string;
   nama: string;
-  asal_gereja: string;
-  nomer_hp: string;
+  sekolah: string;
+  instagram: string;
+  no_hp: string;
   created: string;
 }
 
 export default function AdminPage() {
-  // Initialize isAuthenticated from localStorage
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') { // Check if window is defined (client-side)
-      return localStorage.getItem('isAuthenticated') === 'true';
-    }
-    return false;
-  });
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
@@ -51,9 +46,6 @@ export default function AdminPage() {
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('isAuthenticated', 'true'); // Store login state
-      }
       toast({
         title: "Login Berhasil",
         description: "Selamat datang di panel admin",
@@ -67,18 +59,6 @@ export default function AdminPage() {
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('isAuthenticated'); // Remove login state
-    }
-    setRegistrations([]); // Clear registrations on logout
-    toast({
-      title: "Logged Out",
-      description: "Anda telah berhasil logout.",
-    });
-  };
-
   const fetchRegistrations = async () => {
     setIsLoading(true);
     try {
@@ -86,8 +66,6 @@ export default function AdminPage() {
       if (response.ok) {
         const data = await response.json();
         setRegistrations(data);
-      } else {
-        throw new Error('Failed to fetch registrations');
       }
     } catch (error) {
       console.error('Error fetching registrations:', error);
@@ -118,13 +96,14 @@ export default function AdminPage() {
     // Table
     const tableData = registrations.map(reg => [
       reg.nama,
-      reg.asal_gereja,
-      reg.nomer_hp,
+      reg.sekolah,
+      reg.instagram,
+      reg.no_hp,
       new Date(reg.created).toLocaleDateString('id-ID')
     ]);
 
     autoTable(doc, {
-      head: [['Nama', 'Asal Gereja', 'Nomor HP', 'Tanggal Daftar']],
+      head: [['Nama', 'Sekolah', 'Instagram', 'Nomor HP', 'Tanggal Daftar']],
       body: tableData,
       startY: 50,
       theme: 'grid',
@@ -149,8 +128,9 @@ export default function AdminPage() {
     const worksheet = XLSX.utils.json_to_sheet(
       registrations.map(reg => ({
         'Nama': reg.nama,
-        'Asal Gereja': reg.asal_gereja,
-        'Nomor HP': reg.nomer_hp,
+        'Sekolah': reg.sekolah,
+        'Instagram': reg.instagram,
+        'Nomor HP': reg.no_hp,
         'Tanggal Daftar': new Date(reg.created).toLocaleDateString('id-ID')
       }))
     );
@@ -265,7 +245,7 @@ export default function AdminPage() {
             </Button>
           </Link>
           <Button
-            onClick={handleLogout} // Call the new handleLogout function
+            onClick={() => setIsAuthenticated(false)}
             variant="outline"
             className="border-red-300 text-red-700 hover:bg-red-50"
           >
@@ -331,7 +311,8 @@ export default function AdminPage() {
                   <TableRow className="bg-blue-50">
                     <TableHead className="font-semibold text-blue-900">No</TableHead>
                     <TableHead className="font-semibold text-blue-900">Nama</TableHead>
-                    <TableHead className="font-semibold text-blue-900">Asal Gereja</TableHead>
+                    <TableHead className="font-semibold text-blue-900">Sekolah</TableHead>
+                    <TableHead className="font-semibold text-blue-900">Instagram</TableHead>
                     <TableHead className="font-semibold text-blue-900">Nomor HP</TableHead>
                     <TableHead className="font-semibold text-blue-900">Tanggal Daftar</TableHead>
                   </TableRow>
@@ -345,8 +326,11 @@ export default function AdminPage() {
                       <TableCell className="font-medium">
                         {registration.nama}
                       </TableCell>
-                      <TableCell>{registration.asal_gereja}</TableCell>
-                      <TableCell>{registration.nomer_hp}</TableCell>
+                      <TableCell>{registration.sekolah}</TableCell>
+                      <TableCell className="text-pink-600 font-medium">
+                        {registration.instagram}
+                      </TableCell>
+                      <TableCell>{registration.no_hp}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className="text-blue-700 border-blue-200">
                           {new Date(registration.created).toLocaleDateString('id-ID')}

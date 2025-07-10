@@ -1,27 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Cross, Church, Phone, User, Shield } from 'lucide-react';
+import { Cross, GraduationCap, Instagram, Phone, User, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import Link from 'next/link';
 
 interface FormData {
   nama: string;
-  asal_gereja: string;
-  nomer_hp: string;
+  sekolah: string;
+  instagram: string;
+  no_hp: string;
 }
 
 export default function KKRRegistrationForm() {
   const [formData, setFormData] = useState<FormData>({
     nama: '',
-    asal_gereja: '',
-    nomer_hp: ''
+    sekolah: '',
+    instagram: '',
+    no_hp: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -29,7 +31,7 @@ export default function KKRRegistrationForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.nama || !formData.asal_gereja || !formData.nomer_hp) {
+    if (!formData.nama || !formData.sekolah || !formData.instagram || !formData.no_hp) {
       toast({
         title: "Data Tidak Lengkap",
         description: "Mohon isi semua field yang diperlukan",
@@ -53,13 +55,11 @@ export default function KKRRegistrationForm() {
           title: "Registrasi Berhasil!",
           description: "Terima kasih telah mendaftar untuk acara KKR",
         });
-        setFormData({ nama: '', asal_gereja: '', nomer_hp: '' });
+        setFormData({ nama: '', sekolah: '', instagram: '', no_hp: '' });
       } else {
         throw new Error('Failed to submit');
       }
     } catch (error) {
-      // FIX: Use the 'error' variable to avoid the ESLint warning
-      console.error("Submission error:", error); // Log the error for debugging
       toast({
         title: "Error",
         description: "Terjadi kesalahan saat mengirim data. Silakan coba lagi.",
@@ -99,86 +99,123 @@ export default function KKRRegistrationForm() {
           </div>
         </div>
 
-        <Card className="max-w-2xl mx-auto shadow-xl border-0 bg-white/95 backdrop-blur">
-          <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-t-lg">
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Cross className="w-6 h-6" />
-              Daftar Sekarang
-            </CardTitle>
-            <CardDescription className="text-blue-100">
-              Isi formulir di bawah ini untuk mendaftar acara KKR
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="nama" className="text-blue-900 font-medium flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Nama Lengkap
-                </Label>
-                <Input
-                  id="nama"
-                  name="nama"
-                  type="text"
-                  placeholder="Masukkan nama lengkap Anda"
-                  value={formData.nama}
-                  onChange={handleInputChange}
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
-                  required
+        {/* Main Content with Responsive Layout */}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Photo - Mobile: Above form, Desktop: Left side */}
+            <div className="order-1 lg:order-1">
+              <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-100 to-yellow-100">
+                <img
+                  src="https://images.pexels.com/photos/8468/cross-sunset-sunrise-hill.jpg?auto=compress&cs=tinysrgb&w=800"
+                  alt="KKR Event"
+                  className="w-full h-full object-cover"
                 />
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="asal_gereja" className="text-blue-900 font-medium flex items-center gap-2">
-                  <Church className="w-4 h-4" />
-                  Asal Gereja
-                </Label>
-                <Input
-                  id="asal_gereja"
-                  name="asal_gereja"
-                  type="text"
-                  placeholder="Masukkan nama gereja Anda"
-                  value={formData.asal_gereja}
-                  onChange={handleInputChange}
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
-                  required
-                />
-              </div>
+            {/* Form - Mobile: Below photo, Desktop: Right side */}
+            <div className="order-2 lg:order-2">
+              <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
+                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-t-lg">
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Cross className="w-6 h-6" />
+                    Daftar Sekarang
+                  </CardTitle>
+                  <CardDescription className="text-blue-100">
+                    Isi formulir di bawah ini untuk mendaftar acara KKR
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-8">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="nama" className="text-blue-900 font-medium flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        Nama Lengkap
+                      </Label>
+                      <Input
+                        id="nama"
+                        name="nama"
+                        type="text"
+                        placeholder="Masukkan nama lengkap Anda"
+                        value={formData.nama}
+                        onChange={handleInputChange}
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="nomer_hp" className="text-blue-900 font-medium flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  Nomor HP
-                </Label>
-                <Input
-                  id="nomer_hp"
-                  name="nomer_hp"
-                  type="tel"
-                  placeholder="Masukkan nomor HP Anda"
-                  value={formData.nomer_hp}
-                  onChange={handleInputChange}
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
-                  required
-                />
-              </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="sekolah" className="text-blue-900 font-medium flex items-center gap-2">
+                        <GraduationCap className="w-4 h-4" />
+                        Sekolah
+                      </Label>
+                      <Input
+                        id="sekolah"
+                        name="sekolah"
+                        type="text"
+                        placeholder="Masukkan nama sekolah Anda"
+                        value={formData.sekolah}
+                        onChange={handleInputChange}
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
 
-              <Separator className="my-6" />
+                    <div className="space-y-2">
+                      <Label htmlFor="instagram" className="text-blue-900 font-medium flex items-center gap-2">
+                        <Instagram className="w-4 h-4" />
+                        Instagram
+                      </Label>
+                      <Input
+                        id="instagram"
+                        name="instagram"
+                        type="text"
+                        placeholder="@username_instagram"
+                        value={formData.instagram}
+                        onChange={handleInputChange}
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
 
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-semibold py-3 text-lg shadow-lg transition-all duration-200"
-              >
-                {isSubmitting ? 'Mengirim...' : 'Daftar Sekarang'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+                    <div className="space-y-2">
+                      <Label htmlFor="no_hp" className="text-blue-900 font-medium flex items-center gap-2">
+                        <Phone className="w-4 h-4" />
+                        Nomor HP
+                      </Label>
+                      <Input
+                        id="no_hp"
+                        name="no_hp"
+                        type="tel"
+                        placeholder="Masukkan nomor HP Anda"
+                        value={formData.no_hp}
+                        onChange={handleInputChange}
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <Separator className="my-6" />
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-semibold py-3 text-lg shadow-lg transition-all duration-200"
+                    >
+                      {isSubmitting ? 'Mengirim...' : 'Daftar Sekarang'}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
 
         {/* Admin Access Link */}
         <div className="text-center mt-8">
           <Link href="/admin">
             <Button
+              variant="outline"
               className="flex items-center gap-2 border-blue-300 text-blue-700 hover:bg-blue-50"
             >
               <Shield className="w-4 h-4" />
