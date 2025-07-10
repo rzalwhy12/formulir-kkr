@@ -28,24 +28,37 @@ interface Registration {
 export default function AdminPage() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Inisialisasi isAuthenticated dari localStorage saat komponen pertama kali dimuat
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
 
-  // Simple password authentication (in production, use proper authentication)
   const ADMIN_PASSWORD = 'gppitulungagung';
+  const AUTH_STORAGE_KEY = 'admin_authenticated'; // Kunci untuk localStorage
 
+  // Efek untuk membaca status autentikasi dari localStorage saat mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') { // Pastikan kode berjalan di sisi klien
+      const storedAuth = localStorage.getItem(AUTH_STORAGE_KEY);
+      if (storedAuth === 'true') {
+        setIsAuthenticated(true);
+      }
+    }
+  }, []);
+
+  // Efek untuk mengambil data registrasi hanya jika sudah terautentikasi
   useEffect(() => {
     if (isAuthenticated) {
       fetchRegistrations();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated]); // Dependensi isAuthenticated
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
+      localStorage.setItem(AUTH_STORAGE_KEY, 'true'); // Simpan status autentikasi
       toast({
         title: "Login Berhasil",
         description: "Selamat datang di panel admin",
@@ -59,6 +72,15 @@ export default function AdminPage() {
     }
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem(AUTH_STORAGE_KEY); // Hapus status autentikasi
+    toast({
+      title: "Logout Berhasil",
+      description: "Anda telah keluar dari panel admin",
+    });
+  };
+
   const fetchRegistrations = async () => {
     setIsLoading(true);
     try {
@@ -66,6 +88,8 @@ export default function AdminPage() {
       if (response.ok) {
         const data = await response.json();
         setRegistrations(data);
+      } else {
+        throw new Error('Failed to fetch registrations');
       }
     } catch (error) {
       console.error('Error fetching registrations:', error);
@@ -119,6 +143,14 @@ export default function AdminPage() {
       alternateRowStyles: {
         fillColor: [248, 250, 252],
       },
+      // Menyesuaikan lebar kolom agar sesuai di PDF
+      columnStyles: {
+        0: { cellWidth: 'auto' }, // Nama
+        1: { cellWidth: 'auto' }, // Sekolah
+        2: { cellWidth: 'auto' }, // Instagram
+        3: { cellWidth: 'auto' }, // Nomor HP
+        4: { cellWidth: 25 },     // Tanggal Daftar
+      }
     });
 
     doc.save('registrasi-kkr.pdf');
@@ -145,9 +177,9 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 flex items-center justify-center">
-        <div className="container mx-auto px-4">
-          <Card className="max-w-md mx-auto shadow-xl border-0 bg-white/95 backdrop-blur">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 flex items-center justify-center p-4"> {/* Tambah p-4 */}
+        <div className="w-full max-w-md"> {/* Gunakan max-w-md untuk Card login */}
+          <Card className="mx-auto shadow-xl border-0 bg-white/95 backdrop-blur">
             <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-t-lg text-center">
               <div className="flex justify-center mb-4">
                 <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 p-3 rounded-full">
@@ -237,17 +269,17 @@ export default function AdminPage() {
         </div>
 
         {/* Navigation */}
-        <div className="mb-8 flex justify-between items-center">
-          <Link href="/">
-            <Button variant="outline" className="flex items-center gap-2 border-blue-300 text-blue-700 hover:bg-blue-50">
+        <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4"> {/* Tambah flex-col dan gap */}
+          <Link href="/" className="w-full sm:w-auto"> {/* Tambah w-full */}
+            <Button variant="outline" className="flex items-center gap-2 border-blue-300 text-blue-700 hover:bg-blue-50 w-full justify-center"> {/* Tambah w-full justify-center */}
               <ArrowLeft className="w-4 h-4" />
               Kembali ke Formulir
             </Button>
           </Link>
           <Button
-            onClick={() => setIsAuthenticated(false)}
+            onClick={handleLogout}
             variant="outline"
-            className="border-red-300 text-red-700 hover:bg-red-50"
+            className="border-red-300 text-red-700 hover:bg-red-50 w-full sm:w-auto" // Tambah w-full
           >
             Logout
           </Button>
@@ -255,7 +287,7 @@ export default function AdminPage() {
 
         <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
           <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"> {/* Tambah flex-col dan gap */}
               <div>
                 <CardTitle className="text-2xl flex items-center gap-2">
                   <Users className="w-6 h-6" />
@@ -265,7 +297,7 @@ export default function AdminPage() {
                   Total registrasi: {registrations.length} orang
                 </CardDescription>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2 justify-center sm:justify-start"> {/* Tambah flex-wrap dan justify-center */}
                 <Button
                   onClick={exportToPDF}
                   variant="secondary"
@@ -301,20 +333,16 @@ export default function AdminPage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            {isLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              </div>
-            ) : (
+            <div className="overflow-x-auto"> {/* Kontainer untuk scroll horizontal */}
               <Table>
                 <TableHeader>
                   <TableRow className="bg-blue-50">
-                    <TableHead className="font-semibold text-blue-900">No</TableHead>
-                    <TableHead className="font-semibold text-blue-900">Nama</TableHead>
-                    <TableHead className="font-semibold text-blue-900">Sekolah</TableHead>
-                    <TableHead className="font-semibold text-blue-900">Instagram</TableHead>
-                    <TableHead className="font-semibold text-blue-900">Nomor HP</TableHead>
-                    <TableHead className="font-semibold text-blue-900">Tanggal Daftar</TableHead>
+                    <TableHead className="font-semibold text-blue-900 min-w-[50px]">No</TableHead> {/* Tambah min-w */}
+                    <TableHead className="font-semibold text-blue-900 min-w-[150px]">Nama</TableHead>
+                    <TableHead className="font-semibold text-blue-900 min-w-[150px]">Sekolah</TableHead>
+                    <TableHead className="font-semibold text-blue-900 min-w-[150px]">Instagram</TableHead>
+                    <TableHead className="font-semibold text-blue-900 min-w-[120px]">Nomor HP</TableHead>
+                    <TableHead className="font-semibold text-blue-900 min-w-[150px]">Tanggal Daftar</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -340,7 +368,7 @@ export default function AdminPage() {
                   ))}
                 </TableBody>
               </Table>
-            )}
+            </div>
             {registrations.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
