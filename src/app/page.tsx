@@ -102,7 +102,7 @@ export default function KKRRegistrationForm() {
             Formulir Registrasi KKR
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
-            Kebaktian Kebangunan Rohani - Bergabunglah dengan kami dalam ibadah yang penuh berkat
+            Konfirmasi Kehadiran “Praise and  Worship Night Pemuda Remaja”
           </p>
           <div className="mt-6 flex justify-center">
             <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-yellow-600 rounded-full dark:from-purple-600 dark:to-yellow-700"></div>
@@ -116,7 +116,7 @@ export default function KKRRegistrationForm() {
             <div className="order-1 lg:order-1">
               <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-100 to-yellow-100 dark:from-blue-900 dark:to-gray-800">
                 <img
-                  src="/kkr.jpg"
+                  src="/kkr1.JPG"
                   alt="KKR Event"
                   className="w-full h-full object-cover"
                 />
@@ -132,7 +132,7 @@ export default function KKRRegistrationForm() {
                     Daftar Sekarang
                   </CardTitle>
                   <CardDescription className="text-blue-100 dark:text-blue-200">
-                    Isi formulir di bawah ini untuk mendaftar acara KKR
+                    Isi formulir di bawah ini untuk Konfirmasi Kehadiran
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-8">
