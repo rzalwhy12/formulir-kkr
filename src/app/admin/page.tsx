@@ -84,7 +84,7 @@ export default function AdminPage() {
       // Construct URL with proper encoding for unlimited data fetch
       const baseUrl = 'https://shinyroad-us.backendless.app/api/data/formulir';
       const params = new URLSearchParams({
-        pageSize: '1000', // Start with 1000, can be increased if needed
+        pageSize: '100', // Start with 1000, can be increased if needed
         sortBy: 'created desc'
       });
       const url = `${baseUrl}?${params.toString()}`;
