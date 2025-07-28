@@ -99,10 +99,10 @@ export default function KKRRegistrationForm() {
             </div>
           </div>
           <h1 className="text-4xl font-bold text-blue-900 mb-4 dark:text-gray-100">
-            Formulir Registrasi KKR
+            Konfirmasi Kehadiran “Praise and  Worship Night Pemuda Remaja”
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
-            Konfirmasi Kehadiran “Praise and  Worship Night Pemuda Remaja”
+            Yuk ajak temenmu dan rame-rame hadir ke Praise and Worship Night Pemuda Remaja
           </p>
           <div className="mt-6 flex justify-center">
             <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-yellow-600 rounded-full dark:from-purple-600 dark:to-yellow-700"></div>
