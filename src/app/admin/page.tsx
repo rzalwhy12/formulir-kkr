@@ -81,13 +81,23 @@ export default function AdminPage() {
   const fetchRegistrations = async () => {
     setIsLoading(true);
     try {
-      // Set pageSize to a very high number to fetch all records (effectively unlimited)
-      const response = await fetch('https://shinyroad-us.backendless.app/api/data/formulir?pageSize=10000&sortBy=created%20desc');
+      // Construct URL with proper encoding for unlimited data fetch
+      const baseUrl = 'https://shinyroad-us.backendless.app/api/data/formulir';
+      const params = new URLSearchParams({
+        pageSize: '1000', // Start with 1000, can be increased if needed
+        sortBy: 'created desc'
+      });
+      const url = `${baseUrl}?${params.toString()}`;
+      
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
         setRegistrations(data);
       } else {
-        throw new Error('Failed to fetch registrations');
+        // Get more detailed error information
+        const errorText = await response.text();
+        console.error('Backendless API Error:', response.status, errorText);
+        throw new Error(`Failed to fetch registrations: ${response.status} - ${errorText}`);
       }
     } catch (error) {
       console.error('Error fetching registrations:', error);
