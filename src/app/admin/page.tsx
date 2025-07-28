@@ -81,7 +81,8 @@ export default function AdminPage() {
   const fetchRegistrations = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://shinyroad-us.backendless.app/api/data/formulir');
+      // Set pageSize to a very high number to fetch all records (effectively unlimited)
+      const response = await fetch('https://shinyroad-us.backendless.app/api/data/formulir?pageSize=10000&sortBy=created%20desc');
       if (response.ok) {
         const data = await response.json();
         setRegistrations(data);
